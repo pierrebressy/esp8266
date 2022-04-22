@@ -21,6 +21,8 @@ Useful informations from documentation :
 
 
 #define BUILT_IN_BLINK_ENABLED 1
+#define NUM_DIGIT 4
+
 
 
 // GPIOs pins definition
@@ -41,6 +43,7 @@ int SLEEPING_TIME = 1; // #seconds
 
 unsigned int count=0;
 unsigned int x=0;
+char s[NUM_DIGIT+1]="0000";
 
 void chip_enable(){
     //digitalWrite(GPIO_CHIP_ENABLE, HIGH); // sets the pin on
@@ -167,7 +170,29 @@ void loop() {
       digitalWrite(LED_BUILTIN, LOW);
   #endif
     
+
+#if 1
+  sprintf(s,"%04d",count);
     
+  for(int digit=0;digit<NUM_DIGIT;digit++) {
+      chip_disable();
+      digit_select(digit);
+      x = s[NUM_DIGIT-1-digit];
+      set_data(x&0x01?1:0,x&0x02?1:0,x&0x04?1:0,x&0x08?1:0,x&0x10?1:0,x&0x20?1:0,x&0x40?1:0);
+      write_disable();
+      delayMicroseconds(50);      // pauses for 50 microseconds
+      write_enable();
+      digit_unselect();
+      chip_enable();
+
+      delayMicroseconds(50);      // pauses for 50 microseconds
+  }  
+    
+  // update counter (infinite loop 0 to 99)
+  count = count<9999 ? count+1 : 0;
+  delayMicroseconds(200000);      // pause for 200 ms
+
+#else
   // Digit 0 (Right)
   chip_disable();
   digit_select(0);
@@ -219,8 +244,6 @@ void loop() {
   chip_enable();
 
   delayMicroseconds(50);      // pauses for 50 microseconds
-    
-  count++;
-  delayMicroseconds(25000);      // pauses for 25000 microseconds
+#endif
 
 }
