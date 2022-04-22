@@ -132,21 +132,21 @@ void setup() {
   // Setup Wifi
   digitalWrite(LED_BUILTIN, HIGH);
 
-  Serial.begin(115200);
-  Serial.println();
+  //Serial.begin(115200);
+  //Serial.println();
 
   WiFi.begin("RANTANPLAN", "F5QiRNX1rCf9iqNaYg");
 
-  Serial.print("Connecting");
+  //Serial.print("Connecting");
   while (WiFi.status() != WL_CONNECTED)
   {
     delay(500);
-    Serial.print(".");
+    //Serial.print(".");
   }
-  Serial.println();
+  //Serial.println();
 
-  Serial.print("Connected, IP address: ");
-  Serial.println(WiFi.localIP());
+  //Serial.print("Connected, IP address: ");
+  //Serial.println(WiFi.localIP());
 
 
 }
@@ -173,11 +173,12 @@ void loop() {
 
 #if 1
   sprintf(s, "%04d", count);
-  Serial.println(s);
+  //Serial.println(s);
   for (int digit = 0; digit < NUM_DIGIT; digit++) {
     chip_disable();
     digit_select(digit);
     x = s[NUM_DIGIT - 1 - digit];
+    //Serial.println(x);
     set_data(x & 0x01 ? 1 : 0, x & 0x02 ? 1 : 0, x & 0x04 ? 1 : 0, x & 0x08 ? 1 : 0, x & 0x10 ? 1 : 0, x & 0x20 ? 1 : 0, x & 0x40 ? 1 : 0);
     write_disable();
     delayMicroseconds(50);      // pauses for 50 microseconds
