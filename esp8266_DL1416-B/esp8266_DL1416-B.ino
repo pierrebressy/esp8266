@@ -16,14 +16,9 @@
 #  9    Cursor input    # 19    V-
 # 10    Digit select    # 20    DATA D6
 
-TW (Time to Write) dans la doc a 25 degrés c'est minimum 0,25 microsecondes
-
-D0 à D6 il faut attendre 50 nanosecondes avant de baisser le write
-
-Chip enable on peut 
-
-
-
+Useful informations from documentation :
+ - TW (Time to Write) says at 25 degrees it's at least 0,25 microseconds
+ - D0 to D6 you should wait 50 nanoseconds before OFF write
 
 
 *********/
@@ -33,8 +28,8 @@ Chip enable on peut
 #define BUILT_IN_BLINK_ENABLED 1
 
 
-// Définition des pins GPIO
-//int GPIO_CHIP_ENABLE = 12;
+// GPIOs pins definition
+// int GPIO_CHIP_ENABLE = 12;  // Removed cause GPIO_09 and GPIO_10 can ONLY receive data (no output)
 int GPIO_WRITE = 14;
 int GPIO_DIGIT_SELECT_A0 = 13;
 int GPIO_DIGIT_SELECT_A1 = 12;
@@ -62,12 +57,12 @@ void chip_disable(){
 
 void write_enable(){
     digitalWrite(GPIO_WRITE, HIGH); // Enable
-    delayMicroseconds(50);      // pauses for 50 microseconds
+    delayMicroseconds(50);          // pauses for 50 microseconds
 }
 
 void write_disable(){
-    digitalWrite(GPIO_WRITE, LOW); // Disable
-    delayMicroseconds(50);      // pauses for 50 microseconds
+    digitalWrite(GPIO_WRITE, LOW);  // Disable
+    delayMicroseconds(50);          // pauses for 50 microseconds
 }
 
 void digit_select(int digit){
@@ -114,13 +109,11 @@ void set_data(int a, int b, int c, int d, int e, int f, int g){
 }
 
 void setup() {
-    
-   
+
   pinMode(LED_BUILTIN, OUTPUT);
 
-
   // initialize GPIOs as outputs.
-  //pinMode(GPIO_CHIP_ENABLE, OUTPUT);
+  // pinMode(GPIO_CHIP_ENABLE, OUTPUT);
   pinMode(GPIO_WRITE, OUTPUT);
   pinMode(GPIO_DIGIT_SELECT_A0, OUTPUT);
   pinMode(GPIO_DIGIT_SELECT_A1, OUTPUT);
@@ -139,7 +132,7 @@ void setup() {
   ESP.wdtDisable();
 
   // Setup Wifi
-digitalWrite(LED_BUILTIN, HIGH);
+  digitalWrite(LED_BUILTIN, HIGH);
     
   Serial.begin(115200);
   Serial.println();
@@ -160,7 +153,7 @@ digitalWrite(LED_BUILTIN, HIGH);
   
 }
 
-// switch name with next function for easy gpio debugging
+// Switch name with next function for easy gpio debugging
 void loop_debug() {
   digitalWrite(GPIO_DIGIT_SELECT_A1, LOW);
 
@@ -169,7 +162,7 @@ void loop_debug() {
   delayMicroseconds(250000);
 }
 
-// the loop function runs over and over again forever
+// The loop function runs over and over again forever
 void loop() {
     
   // Lowers builtin led intensity 
