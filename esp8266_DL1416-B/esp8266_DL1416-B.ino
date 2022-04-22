@@ -22,6 +22,10 @@ D0 à D6 il faut attendre 50 nanosecondes avant de baisser le write
 
 Chip enable on peut 
 
+
+
+F5QiRNX1rCf9iqNaYg
+
 *********/
 
 #define BUILT_IN_BLINK_ENABLED 1
