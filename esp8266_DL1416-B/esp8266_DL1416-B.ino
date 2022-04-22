@@ -51,7 +51,7 @@ unsigned int h = 0;
 unsigned int m = 0;
 unsigned int s = 0;
 unsigned int x = 0;
-char s[NUM_DIGIT + 1] = "0000";
+char ss[NUM_DIGIT + 1] = "0000";
 
 void chip_enable() {
   //digitalWrite(GPIO_CHIP_ENABLE, HIGH); // sets the pin on
@@ -225,12 +225,12 @@ void loop() {
 
 
 #if 1
-  sprintf(s, "%02d%02d", m,s);
+  sprintf(ss, "%02d%02d", m,s);
   //Serial.println(s);
   for (int digit = 0; digit < NUM_DIGIT; digit++) {
     chip_disable();
     digit_select(digit);
-    x = s[NUM_DIGIT - 1 - digit];
+    x = ss[NUM_DIGIT - 1 - digit];
     //Serial.println(x);
     set_data(x & 0x01 ? 1 : 0, x & 0x02 ? 1 : 0, x & 0x04 ? 1 : 0, x & 0x08 ? 1 : 0, x & 0x10 ? 1 : 0, x & 0x20 ? 1 : 0, x & 0x40 ? 1 : 0);
     write_disable();
