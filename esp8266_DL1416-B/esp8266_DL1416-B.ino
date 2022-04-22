@@ -25,10 +25,10 @@ Chip enable on peut
 *********/
 
 // Définition des pins GPIO
-int GPIO_CHIP_ENABLE = 12;
+//int GPIO_CHIP_ENABLE = 12;
 int GPIO_WRITE = 14;
-int GPIO_DIGIT_SELECT_A0 = 9;
-int GPIO_DIGIT_SELECT_A1 = 10;
+int GPIO_DIGIT_SELECT_A0 = 13;
+int GPIO_DIGIT_SELECT_A1 = 12;
 
 int GPIO_D0 = 0;
 int GPIO_D1 = 1;
@@ -41,11 +41,11 @@ int GPIO_D6 = 15;  // Did not found gpio_6 ?
 int SLEEPING_TIME = 1; // #seconds
 
 void chip_enable(){
-    digitalWrite(GPIO_CHIP_ENABLE, HIGH); // sets the pin on
+    //digitalWrite(GPIO_CHIP_ENABLE, HIGH); // sets the pin on
 }
 
 void chip_disable(){
-    digitalWrite(GPIO_CHIP_ENABLE, LOW); // sets the pin off
+    //digitalWrite(GPIO_CHIP_ENABLE, LOW); // sets the pin off
 }
 
 void write_enable(){
@@ -103,7 +103,7 @@ void set_data(int a, int b, int c, int d, int e, int f, int g){
 
 void setup() {
   // initialize GPIOs as outputs.
-  pinMode(GPIO_CHIP_ENABLE, OUTPUT);
+  //pinMode(GPIO_CHIP_ENABLE, OUTPUT);
   pinMode(GPIO_WRITE, OUTPUT);
   pinMode(GPIO_DIGIT_SELECT_A0, OUTPUT);
   pinMode(GPIO_DIGIT_SELECT_A1, OUTPUT);
@@ -118,8 +118,18 @@ void setup() {
   
   chip_enable();
   write_disable();
+  
+  ESP.wdtDisable();
 }
 
+
+void loop_old() {
+  digitalWrite(GPIO_DIGIT_SELECT_A1, LOW);
+
+  delayMicroseconds(250000);
+  digitalWrite(GPIO_DIGIT_SELECT_A1, HIGH);
+  delayMicroseconds(250000);
+}
 
 // the loop function runs over and over again forever
 void loop() {
