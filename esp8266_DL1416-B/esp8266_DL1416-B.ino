@@ -43,6 +43,9 @@ int GPIO_D6 = 15;  // Did not found gpio_6 ?
 
 int SLEEPING_TIME = 1; // #seconds
 
+unsigned int count=0;
+unsigned int x=0;
+
 void chip_enable(){
     //digitalWrite(GPIO_CHIP_ENABLE, HIGH); // sets the pin on
 }
@@ -153,7 +156,8 @@ void loop() {
   // Digit 0
   chip_disable();
   digit_select(0);
-  set_data(1,0,1,0,0,0,1);
+  x=(count&0x000F)>>0;
+  set_data(x&0x40?1:0,x&0x20?1:0,x&0x10?1:0,x&0x08?1:0,x&0x04?1:0,x&0x02?1:0,x&0x01?1:0);
   write_disable();
   delayMicroseconds(50);      // pauses for 50 microseconds
   write_enable();
@@ -165,7 +169,8 @@ void loop() {
   // Digit 1
   chip_disable();
   digit_select(1);
-  set_data(0,0,1,0,1,0,1);
+  x=(count&0x00F0)>>4;
+  set_data(x&0x40?1:0,x&0x20?1:0,x&0x10?1:0,x&0x08?1:0,x&0x04?1:0,x&0x02?1:0,x&0x01?1:0);
   write_disable();
   delayMicroseconds(50);      // pauses for 50 microseconds
   write_enable();
@@ -177,7 +182,8 @@ void loop() {
   // Digit 2
   chip_disable();
   digit_select(2);
-  set_data(1,0,0,1,0,0,1);
+  x=(count&0x0F00)>>8;
+  set_data(x&0x40?1:0,x&0x20?1:0,x&0x10?1:0,x&0x08?1:0,x&0x04?1:0,x&0x02?1:0,x&0x01?1:0);
   write_disable();
   delayMicroseconds(50);      // pauses for 50 microseconds
   write_enable();
@@ -189,7 +195,8 @@ void loop() {
   // Digit 3
   chip_disable();
   digit_select(3);
-  set_data(0,1,0,0,0,0,1);
+  x=(count&0xF000)>>12;
+  set_data(x&0x40?1:0,x&0x20?1:0,x&0x10?1:0,x&0x08?1:0,x&0x04?1:0,x&0x02?1:0,x&0x01?1:0);
   write_disable();
   delayMicroseconds(50);      // pauses for 50 microseconds
   write_enable();
@@ -197,4 +204,8 @@ void loop() {
   chip_enable();
 
   delayMicroseconds(50);      // pauses for 50 microseconds
+    
+  count++;
+  delayMicroseconds(25000);      // pauses for 50 microseconds
+
 }
