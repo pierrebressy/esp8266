@@ -41,7 +41,9 @@ int GPIO_D6 = 15;  // Did not found gpio_6 ?
 
 int SLEEPING_TIME = 1; // #seconds
 
-unsigned int count = 0;
+unsigned int h = 0;
+unsigned int m = 0;
+unsigned int s = 0;
 unsigned int x = 0;
 char s[NUM_DIGIT + 1] = "0000";
 
@@ -166,13 +168,13 @@ void loop() {
   // Lowers builtin led intensity
 #if BUILT_IN_BLINK_ENABLED
   digitalWrite(LED_BUILTIN, HIGH);
-  delayMicroseconds(25000);
+  delayMicroseconds(12345);
   digitalWrite(LED_BUILTIN, LOW);
 #endif
 
 
 #if 1
-  sprintf(s, "%04d", count);
+  sprintf(s, "%02d%02d", m,s);
   //Serial.println(s);
   for (int digit = 0; digit < NUM_DIGIT; digit++) {
     chip_disable();
@@ -189,9 +191,16 @@ void loop() {
     delayMicroseconds(50);      // pauses for 50 microseconds
   }
 
-  // update counter (infinite loop 0 to 99)
-  count = count < 9999 ? count + 1 : 0;
-  delayMicroseconds(200000);      // pause for 200 ms
+  s++;
+  if(s>59) {
+    s=0;
+    m++;
+  }
+  if(m>59) {
+    m=0;
+    h++;
+  }
+  delayMicroseconds(125000);      // pause for 200 ms
 
 #else
   // Digit 0 (Right)
