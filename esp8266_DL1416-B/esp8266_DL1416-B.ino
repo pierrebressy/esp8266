@@ -19,6 +19,8 @@
 *********/
 #include <ESP8266WiFi.h>
 
+#include <Ticker.h>  //Ticker Library
+
 
 #define BUILT_IN_BLINK_ENABLED 1
 #define NUM_DIGIT 4
@@ -40,6 +42,10 @@ int GPIO_D5 = 5;
 int GPIO_D6 = 15;  // Did not found gpio_6 ?
 
 int SLEEPING_TIME = 1; // #seconds
+
+
+Ticker myClock;
+
 
 unsigned int h = 0;
 unsigned int m = 0;
@@ -108,6 +114,39 @@ void set_data(int a, int b, int c, int d, int e, int f, int g) {
   digitalWrite(GPIO_D6, g);
 }
 
+
+void updateClockAndDisplay()
+{
+  sprintf(s, "%02d%02d", m,s);
+  for (int digit = 0; digit < NUM_DIGIT; digit++) {
+    chip_disable();
+    digit_select(digit);
+    x = s[NUM_DIGIT - 1 - digit];
+    //Serial.println(x);
+    set_data(x & 0x01 ? 1 : 0, x & 0x02 ? 1 : 0, x & 0x04 ? 1 : 0, x & 0x08 ? 1 : 0, x & 0x10 ? 1 : 0, x & 0x20 ? 1 : 0, x & 0x40 ? 1 : 0);
+    write_disable();
+    delayMicroseconds(50);      // pauses for 50 microseconds
+    write_enable();
+    digit_unselect();
+    chip_enable();
+
+    delayMicroseconds(50);      // pauses for 50 microseconds
+  }
+
+  s++;
+  if(s>59) {
+    s=0;
+    m++;
+  }
+  if(m>59) {
+    m=0;
+    h++;
+  }
+  return;
+}
+
+
+
 void setup() {
 
   pinMode(LED_BUILTIN, OUTPUT);
@@ -150,6 +189,7 @@ void setup() {
   //Serial.print("Connected, IP address: ");
   //Serial.println(WiFi.localIP());
 
+  myClock.attach(1.0, updateClockAndDisplay); 
 
 }
 
@@ -162,9 +202,20 @@ void loop_debug() {
   delayMicroseconds(250000);
 }
 
+
+
+
+
+
+
+
 // The loop function runs over and over again forever
 void loop() {
   ESP.wdtFeed();
+  delayMicroseconds(100000); // 100ms
+
+#if 0
+
   // Lowers builtin led intensity
 #if BUILT_IN_BLINK_ENABLED
   digitalWrite(LED_BUILTIN, HIGH);
@@ -254,6 +305,9 @@ void loop() {
   chip_enable();
 
   delayMicroseconds(50);      // pauses for 50 microseconds
+#endif
+  
+  
 #endif
 
 }
