@@ -139,7 +139,8 @@ void setup() {
   ESP.wdtDisable();
 
   // Setup Wifi
-
+digitalWrite(LED_BUILTIN, HIGH);
+    
   Serial.begin(115200);
   Serial.println();
 
@@ -159,8 +160,8 @@ void setup() {
   
 }
 
-
-void loop_old() {
+// switch name with next function for easy gpio debugging
+void loop_debug() {
   digitalWrite(GPIO_DIGIT_SELECT_A1, LOW);
 
   delayMicroseconds(250000);
@@ -171,15 +172,15 @@ void loop_old() {
 // the loop function runs over and over again forever
 void loop() {
     
+  // Lowers builtin led intensity 
+  #if BUILT_IN_BLINK_ENABLED
+      digitalWrite(LED_BUILTIN, HIGH);
+      delayMicroseconds(25000);
+      digitalWrite(LED_BUILTIN, LOW);
+  #endif
     
-#if BUILT_IN_BLINK_ENABLED
-    digitalWrite(LED_BUILTIN, HIGH);
-    delayMicroseconds(25000);
-    digitalWrite(LED_BUILTIN, LOW);
-#endif
     
-    
-  // Digit 0
+  // Digit 0 (Right)
   chip_disable();
   digit_select(0);
   x=(count&0x000F)>>0;
@@ -218,7 +219,7 @@ void loop() {
 
   delayMicroseconds(50);      // pauses for 50 microseconds
 
-  // Digit 3
+  // Digit 3 (Left)
   chip_disable();
   digit_select(3);
   x=(count&0xF000)>>12;
@@ -232,6 +233,6 @@ void loop() {
   delayMicroseconds(50);      // pauses for 50 microseconds
     
   count++;
-  delayMicroseconds(25000);      // pauses for 50 microseconds
+  delayMicroseconds(25000);      // pauses for 25000 microseconds
 
 }
