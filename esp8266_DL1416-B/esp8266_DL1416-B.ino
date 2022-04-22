@@ -15,6 +15,13 @@
 #  8    Write           # 18    V+
 #  9    Cursor input    # 19    V-
 # 10    Digit select    # 20    DATA D6
+
+TW (Time to Write) dans la doc a 25 degrés c'est minimum 0,25 microsecondes
+
+D0 à D6 il faut attendre 50 nanosecondes avant de baisser le write
+
+Chip enable on peut 
+
 *********/
 
 // Définition des pins GPIO
@@ -121,6 +128,7 @@ void loop() {
   digit_select(0);
   set_data(1,0,1,0,0,0,1);
   write_disable();
+  delayMicroseconds(50);      // pauses for 50 microseconds
   write_enable();
   digit_unselect();
   chip_enable();
@@ -132,6 +140,7 @@ void loop() {
   digit_select(1);
   set_data(0,0,1,0,1,0,1);
   write_disable();
+  delayMicroseconds(50);      // pauses for 50 microseconds
   write_enable();
   digit_unselect();
   chip_enable();
@@ -143,6 +152,7 @@ void loop() {
   digit_select(2);
   set_data(1,0,0,1,0,0,1);
   write_disable();
+  delayMicroseconds(50);      // pauses for 50 microseconds
   write_enable();
   digit_unselect();
   chip_enable();
@@ -154,6 +164,7 @@ void loop() {
   digit_select(3);
   set_data(0,1,0,0,0,0,1);
   write_disable();
+  delayMicroseconds(50);      // pauses for 50 microseconds
   write_enable();
   digit_unselect();
   chip_enable();
