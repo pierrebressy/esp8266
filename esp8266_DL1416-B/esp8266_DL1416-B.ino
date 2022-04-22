@@ -144,6 +144,9 @@ void updateClockAndDisplay()
   if(hh>23) {
     hh=0;
   }
+  
+  analogWrite(LED_BUILTIN, ss*255/60); // ratio=30/255
+
   return;
 }
 
