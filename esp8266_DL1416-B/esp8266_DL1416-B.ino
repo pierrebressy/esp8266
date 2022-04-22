@@ -31,22 +31,7 @@ int GPIO_D4 = 4;
 int GPIO_D5 = 5;
 int GPIO_D6 = 15;  // Did not found gpio_6 ?
 
-void setup() {
-  // initialize GPIOs as outputs.
-  pinMode(GPIO_CHIP_ENABLE, OUTPUT);
-  pinMode(GPIO_WRITE, OUTPUT);
-  pinMode(GPIO_DIGIT_SELECT_A0, OUTPUT);
-  pinMode(GPIO_DIGIT_SELECT_A1, OUTPUT);
-  
-  pinMode(GPIO_D0, OUTPUT);
-  pinMode(GPIO_D1, OUTPUT);
-  pinMode(GPIO_D2, OUTPUT);
-  pinMode(GPIO_D3, OUTPUT);
-  pinMode(GPIO_D4, OUTPUT);
-  pinMode(GPIO_D5, OUTPUT);
-  pinMode(GPIO_D6, OUTPUT);
-}
-
+int SLEEPING_TIME = 1; // #seconds
 
 void chip_enable(){
     digitalWrite(GPIO_CHIP_ENABLE, HIGH); // sets the pin on
@@ -95,69 +80,83 @@ void digit_select(int digit){
 
 void digit_unselect(){
   //  Désactivation des deux digit select
-  digitalWrite(GPIO_DIGIT_SELECT_A0, LOW) // Disable
-  digitalWrite(GPIO_DIGIT_SELECT_A1, LOW) // Disable
+  digitalWrite(GPIO_DIGIT_SELECT_A0, LOW); // Disable
+  digitalWrite(GPIO_DIGIT_SELECT_A1, LOW); // Disable
 }
 
-void set_data(a,b,c,d,e,f,g){
-  digitalWrite(GPIO_D0, a)
-  digitalWrite(GPIO_D1, b)
-  digitalWrite(GPIO_D2, c)
-  digitalWrite(GPIO_D3, d)
-  digitalWrite(GPIO_D4, e)
-  digitalWrite(GPIO_D5, f)
-  digitalWrite(GPIO_D6, g)
+void set_data(int a, int b, int c, int d, int e, int f, int g){
+  digitalWrite(GPIO_D0, a);
+  digitalWrite(GPIO_D1, b);
+  digitalWrite(GPIO_D2, c);
+  digitalWrite(GPIO_D3, d);
+  digitalWrite(GPIO_D4, e);
+  digitalWrite(GPIO_D5, f);
+  digitalWrite(GPIO_D6, g);
 }
 
-SLEEPING_TIME = 1 // #seconds
-
-chip_enable()
-write_disable()
+void setup() {
+  // initialize GPIOs as outputs.
+  pinMode(GPIO_CHIP_ENABLE, OUTPUT);
+  pinMode(GPIO_WRITE, OUTPUT);
+  pinMode(GPIO_DIGIT_SELECT_A0, OUTPUT);
+  pinMode(GPIO_DIGIT_SELECT_A1, OUTPUT);
+  
+  pinMode(GPIO_D0, OUTPUT);
+  pinMode(GPIO_D1, OUTPUT);
+  pinMode(GPIO_D2, OUTPUT);
+  pinMode(GPIO_D3, OUTPUT);
+  pinMode(GPIO_D4, OUTPUT);
+  pinMode(GPIO_D5, OUTPUT);
+  pinMode(GPIO_D6, OUTPUT);
+  
+  chip_enable();
+  write_disable();
+}
 
 
 // the loop function runs over and over again forever
 void loop() {
   // Digit 0
-  chip_disable()
-  digit_select(0)
-  set_data(1,0,1,0,0,0,1)
-  write_disable()
-  write_enable()
-  digit_unselect()
-  chip_enable()
+  chip_disable();
+  digit_select(0);
+  set_data(1,0,1,0,0,0,1);
+  write_disable();
+  write_enable();
+  digit_unselect();
+  chip_enable();
 
   delayMicroseconds(50);      // pauses for 50 microseconds
 
   // Digit 1
-  chip_disable()
-  digit_select(1)
-  set_data(0,0,1,0,1,0,1)
-  write_disable()
-  write_enable()
-  digit_unselect()
-  chip_enable()
+  chip_disable();
+  digit_select(1);
+  set_data(0,0,1,0,1,0,1);
+  write_disable();
+  write_enable();
+  digit_unselect();
+  chip_enable();
 
   delayMicroseconds(50);      // pauses for 50 microseconds
 
   // Digit 2
-  chip_disable()
-  digit_select(2)
-  set_data(1,0,0,1,0,0,1)
-  write_disable()
-  write_enable()
-  digit_unselect()
-  chip_enable()
+  chip_disable();
+  digit_select(2);
+  set_data(1,0,0,1,0,0,1);
+  write_disable();
+  write_enable();
+  digit_unselect();
+  chip_enable();
 
   delayMicroseconds(50);      // pauses for 50 microseconds
 
   // Digit 3
-  chip_disable()
-  digit_select(3)
-  set_data(0,1,0,0,0,0,1)
-  write_disable()
-  write_enable()
-  digit_unselect()
-  chip_enable()
+  chip_disable();
+  digit_select(3);
+  set_data(0,1,0,0,0,0,1);
+  write_disable();
+  write_enable();
+  digit_unselect();
+  chip_enable();
 
   delayMicroseconds(50);      // pauses for 50 microseconds
 }
