@@ -166,7 +166,7 @@ void loop() {
       chip_disable();
       digit_select(digit);
       x = s[NUM_DIGIT-1-digit];
-      set_data(x&0x40?1:0,x&0x20?1:0,x&0x10?1:0,x&0x08?1:0,x&0x04?1:0,x&0x02?1:0,x&0x01?1:0);
+      set_data(x&0x01?1:0,x&0x02?1:0,x&0x04?1:0,x&0x08?1:0,x&0x10?1:0,x&0x20?1:0,x&0x40?1:0);
       write_disable();
       delayMicroseconds(50);      // pauses for 50 microseconds
       write_enable();
