@@ -47,11 +47,11 @@ int SLEEPING_TIME = 1; // #seconds
 Ticker myClock;
 
 
-unsigned int h = 0;
-unsigned int m = 0;
-unsigned int s = 0;
+unsigned int hh = 0;
+unsigned int mm = 0;
+unsigned int ss = 0;
 unsigned int x = 0;
-char ss[NUM_DIGIT + 1] = "0000";
+char s[NUM_DIGIT + 1] = "0000";
 
 void chip_enable() {
   //digitalWrite(GPIO_CHIP_ENABLE, HIGH); // sets the pin on
@@ -117,7 +117,7 @@ void set_data(int a, int b, int c, int d, int e, int f, int g) {
 
 void updateClockAndDisplay()
 {
-  sprintf(s, "%02d%02d", m,s);
+  sprintf(s, "%02d%02d", mm,ss);
   for (int digit = 0; digit < NUM_DIGIT; digit++) {
     chip_disable();
     digit_select(digit);
@@ -133,14 +133,17 @@ void updateClockAndDisplay()
     delayMicroseconds(50);      // pauses for 50 microseconds
   }
 
-  s++;
-  if(s>59) {
-    s=0;
-    m++;
+  ss++;
+  if(ss>59) {
+    ss=0;
+    mm++;
   }
-  if(m>59) {
-    m=0;
-    h++;
+  if(mm>59) {
+    mm=0;
+    hh++;
+  }
+  if(hh>23) {
+    hh=0;
   }
   return;
 }
