@@ -24,6 +24,9 @@ Chip enable on peut
 
 *********/
 
+#define BUILT_IN_BLINK_ENABLED 1
+
+
 // Définition des pins GPIO
 //int GPIO_CHIP_ENABLE = 12;
 int GPIO_WRITE = 14;
@@ -102,6 +105,11 @@ void set_data(int a, int b, int c, int d, int e, int f, int g){
 }
 
 void setup() {
+    
+   
+  pinMode(LED_BUILTIN, OUTPUT);
+
+
   // initialize GPIOs as outputs.
   //pinMode(GPIO_CHIP_ENABLE, OUTPUT);
   pinMode(GPIO_WRITE, OUTPUT);
@@ -133,6 +141,15 @@ void loop_old() {
 
 // the loop function runs over and over again forever
 void loop() {
+    
+    
+#if BUILT_IN_BLINK_ENABLED
+    digitalWrite(LED_BUILTIN, HIGH);
+    delayMicroseconds(25000);
+    digitalWrite(LED_BUILTIN, LOW);
+#endif
+    
+    
   // Digit 0
   chip_disable();
   digit_select(0);
