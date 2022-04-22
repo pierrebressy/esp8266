@@ -24,7 +24,7 @@ Chip enable on peut
 
 
 
-F5QiRNX1rCf9iqNaYg
+
 
 *********/
 
@@ -135,6 +135,26 @@ void setup() {
   write_disable();
   
   ESP.wdtDisable();
+
+  // Setup Wifi
+
+  Serial.begin(115200);
+  Serial.println();
+
+  WiFi.begin("RANTANPLAN", "F5QiRNX1rCf9iqNaYg");
+
+  Serial.print("Connecting");
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println();
+
+  Serial.print("Connected, IP address: ");
+  Serial.println(WiFi.localIP());
+
+  
 }
 
 
