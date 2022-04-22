@@ -27,6 +27,8 @@ Chip enable on peut
 
 
 *********/
+#include <ESP8266WiFi.h>
+
 
 #define BUILT_IN_BLINK_ENABLED 1
 
