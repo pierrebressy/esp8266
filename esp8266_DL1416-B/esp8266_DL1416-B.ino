@@ -215,9 +215,9 @@ void loop() {
   ESP.wdtFeed();
   
   // dummy freq on LED_BUILTIN
-  digitalWrite(LED_BUILTIN, HIGH);
-  delayMicroseconds(1000);
   digitalWrite(LED_BUILTIN, LOW);
+  delayMicroseconds(1000);
+  digitalWrite(LED_BUILTIN, HIGH);
   delayMicroseconds(30000); 
 
   
