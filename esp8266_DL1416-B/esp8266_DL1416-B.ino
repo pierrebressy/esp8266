@@ -22,7 +22,6 @@
 #include <Ticker.h>  //Ticker Library
 
 
-#define BUILT_IN_BLINK_ENABLED 1
 #define NUM_DIGIT 4
 
 
@@ -193,7 +192,9 @@ void setup() {
   //Serial.println(WiFi.localIP());
 
   myClock.attach(1.0, updateClockAndDisplay); // 1.0 = 1 second
-
+  
+  analogWriteFreq(1000); // 1000Hz
+  analogWrite(LED_BUILTIN, 30); // ratio=30/255
 }
 
 // Switch name with next function for easy gpio debugging
@@ -210,101 +211,4 @@ void loop_debug() {
 void loop() {
   ESP.wdtFeed();
   delayMicroseconds(100000); // 100ms
-
-#if 0
-
-  // Lowers builtin led intensity
-#if BUILT_IN_BLINK_ENABLED
-  digitalWrite(LED_BUILTIN, HIGH);
-  delayMicroseconds(12345);
-  digitalWrite(LED_BUILTIN, LOW);
-#endif
-
-
-#if 1
-  sprintf(ss, "%02d%02d", m,s);
-  //Serial.println(s);
-  for (int digit = 0; digit < NUM_DIGIT; digit++) {
-    chip_disable();
-    digit_select(digit);
-    x = ss[NUM_DIGIT - 1 - digit];
-    //Serial.println(x);
-    set_data(x & 0x01 ? 1 : 0, x & 0x02 ? 1 : 0, x & 0x04 ? 1 : 0, x & 0x08 ? 1 : 0, x & 0x10 ? 1 : 0, x & 0x20 ? 1 : 0, x & 0x40 ? 1 : 0);
-    write_disable();
-    delayMicroseconds(50);      // pauses for 50 microseconds
-    write_enable();
-    digit_unselect();
-    chip_enable();
-
-    delayMicroseconds(50);      // pauses for 50 microseconds
-  }
-
-  s++;
-  if(s>59) {
-    s=0;
-    m++;
-  }
-  if(m>59) {
-    m=0;
-    h++;
-  }
-  delayMicroseconds(125000);      // pause for 200 ms
-
-#else
-  // Digit 0 (Right)
-  chip_disable();
-  digit_select(0);
-  x = (count & 0x000F) >> 0;
-  set_data(x & 0x40 ? 1 : 0, x & 0x20 ? 1 : 0, x & 0x10 ? 1 : 0, x & 0x08 ? 1 : 0, x & 0x04 ? 1 : 0, x & 0x02 ? 1 : 0, x & 0x01 ? 1 : 0);
-  write_disable();
-  delayMicroseconds(50);      // pauses for 50 microseconds
-  write_enable();
-  digit_unselect();
-  chip_enable();
-
-  delayMicroseconds(50);      // pauses for 50 microseconds
-
-  // Digit 1
-  chip_disable();
-  digit_select(1);
-  x = (count & 0x00F0) >> 4;
-  set_data(x & 0x40 ? 1 : 0, x & 0x20 ? 1 : 0, x & 0x10 ? 1 : 0, x & 0x08 ? 1 : 0, x & 0x04 ? 1 : 0, x & 0x02 ? 1 : 0, x & 0x01 ? 1 : 0);
-  write_disable();
-  delayMicroseconds(50);      // pauses for 50 microseconds
-  write_enable();
-  digit_unselect();
-  chip_enable();
-
-  delayMicroseconds(50);      // pauses for 50 microseconds
-
-  // Digit 2
-  chip_disable();
-  digit_select(2);
-  x = (count & 0x0F00) >> 8;
-  set_data(x & 0x40 ? 1 : 0, x & 0x20 ? 1 : 0, x & 0x10 ? 1 : 0, x & 0x08 ? 1 : 0, x & 0x04 ? 1 : 0, x & 0x02 ? 1 : 0, x & 0x01 ? 1 : 0);
-  write_disable();
-  delayMicroseconds(50);      // pauses for 50 microseconds
-  write_enable();
-  digit_unselect();
-  chip_enable();
-
-  delayMicroseconds(50);      // pauses for 50 microseconds
-
-  // Digit 3 (Left)
-  chip_disable();
-  digit_select(3);
-  x = (count & 0xF000) >> 12;
-  set_data(x & 0x40 ? 1 : 0, x & 0x20 ? 1 : 0, x & 0x10 ? 1 : 0, x & 0x08 ? 1 : 0, x & 0x04 ? 1 : 0, x & 0x02 ? 1 : 0, x & 0x01 ? 1 : 0);
-  write_disable();
-  delayMicroseconds(50);      // pauses for 50 microseconds
-  write_enable();
-  digit_unselect();
-  chip_enable();
-
-  delayMicroseconds(50);      // pauses for 50 microseconds
-#endif
-  
-  
-#endif
-
 }
