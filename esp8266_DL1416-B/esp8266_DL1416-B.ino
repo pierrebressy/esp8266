@@ -192,7 +192,7 @@ void setup() {
   //Serial.print("Connected, IP address: ");
   //Serial.println(WiFi.localIP());
 
-  myClock.attach(1.0, updateClockAndDisplay); 
+  myClock.attach(1.0, updateClockAndDisplay); // 1.0 = 1 second
 
 }
 
@@ -204,12 +204,6 @@ void loop_debug() {
   digitalWrite(GPIO_DIGIT_SELECT_A1, HIGH);
   delayMicroseconds(250000);
 }
-
-
-
-
-
-
 
 
 // The loop function runs over and over again forever
