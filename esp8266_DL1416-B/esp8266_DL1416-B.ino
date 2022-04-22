@@ -196,8 +196,8 @@ void setup() {
 
   myClock.attach(1.0, updateClockAndDisplay); // 1.0 = 1 second
   
-  analogWriteFreq(1000); // 1000Hz
-  analogWrite(LED_BUILTIN, 30); // ratio=30/255
+  //analogWriteFreq(1000); // 1000Hz
+  //analogWrite(LED_BUILTIN, 30); // ratio=30/255
 }
 
 // Switch name with next function for easy gpio debugging
@@ -213,5 +213,12 @@ void loop_debug() {
 // The loop function runs over and over again forever
 void loop() {
   ESP.wdtFeed();
-  delayMicroseconds(100000); // 100ms
+  
+  // dummy freq on LED_BUILTIN
+  digitalWrite(LED_BUILTIN, HIGH);
+  delayMicroseconds(1000);
+  digitalWrite(LED_BUILTIN, LOW);
+  delayMicroseconds(30000); 
+
+  
 }
