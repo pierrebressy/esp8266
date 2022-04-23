@@ -133,7 +133,7 @@ void updateClockAndDisplay()
     digit_select(digit);
     x = s[NUM_DIGIT - 1 - digit];
     //Serial.println(x);
-    set_data(x & 0x01 ? 1 : 0, x & 0x02 ? 1 : 0, x & 0x04 ? 1 : 0, x & 0x08 ? 1 : 0, x & 0x10 ? 1 : 0, x & 0x20 ? 1 : 0, x & 0x40 ? 1 : 0);
+    set_data(x);
     write_disable();
     delayMicroseconds(50);      // pauses for 50 microseconds
     write_enable();
@@ -159,7 +159,9 @@ void updateClockAndDisplay()
   analogWrite(LED_BUILTIN, ss * 255 / 60); // ratio=30/255
 
 #else
-    for (int k = 0; k < NUM_DIGIT; k++) {
+  // Here we print ascci car
+  int k = 0;
+    for (k = 0; k < NUM_DIGIT; k++) {
       x = msg[count + k];
       chip_disable();
       digit_select(NUM_DIGIT - 1 - k);
@@ -171,7 +173,6 @@ void updateClockAndDisplay()
       chip_enable();
       delayMicroseconds(50); // pauses for 50 microseconds
     }
-  }
 
   count++;
   // loop to the begining of the message
