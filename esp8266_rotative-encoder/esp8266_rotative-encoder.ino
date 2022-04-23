@@ -22,8 +22,8 @@ void setup()
     digitalWrite(clkInterruptPin, HIGH); // turn on pull-up resistor
     digitalWrite(dataPin, HIGH);         // turn on pull-up resistor
 
-    digitalPinToInterrupt(clkInterruptPin);
-    attachInterrupt(0, interrupt_function, CHANGE);
+    
+    attachInterrupt(digitalPinToInterrupt(clkInterruptPin), interrupt_function, CHANGE);
 }
 
 void loop()
