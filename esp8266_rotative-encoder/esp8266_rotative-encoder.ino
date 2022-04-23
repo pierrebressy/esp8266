@@ -26,8 +26,8 @@ void setup()
 void loop()
 {
     Serial.print(loopCounter);
-    Serial.print("encoderPos:");
-    Serial.print(encoderPos, DEC);
+    Serial.print("data:");
+    Serial.print(digitalRead(dataPin)==HIGH, DEC);
     Serial.println();
     delayMicroseconds(250000);
     loopCounter++;
