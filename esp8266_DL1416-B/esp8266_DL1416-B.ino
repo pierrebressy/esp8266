@@ -42,6 +42,7 @@ int GPIO_D6 = 15;  // Did not found gpio_6 ?
 
 int SLEEPING_TIME = 1; // #seconds
 
+int show_clock=1;
 
 Ticker myClock;
 dht DHT;
@@ -133,23 +134,50 @@ int chk = DHT.read11(DHT11_PIN);
 
   
 #if DISPLAY_CLOCK
+  
+  show_clock = ss & 1;
+  
+  
+  if(show_clock) {
+    sprintf(s, "%02d%02d", mm, ss); // print to string
+    for (int digit = 0; digit < NUM_DIGIT; digit++) {
+      chip_disable();
+      digit_select(digit);
+      x = s[NUM_DIGIT - 1 - digit];
+      //Serial.println(x);
+      set_data(x);
+      write_disable();
+      delayMicroseconds(50);      // pauses for 50 microseconds
+      write_enable();
+      digit_unselect();
+      chip_enable();
 
-  sprintf(s, "%02d%02d", mm, ss); // print to string
-  for (int digit = 0; digit < NUM_DIGIT; digit++) {
-    chip_disable();
-    digit_select(digit);
-    x = s[NUM_DIGIT - 1 - digit];
-    //Serial.println(x);
-    set_data(x);
-    write_disable();
-    delayMicroseconds(50);      // pauses for 50 microseconds
-    write_enable();
-    digit_unselect();
-    chip_enable();
+      delayMicroseconds(50);      // pauses for 50 microseconds
+    }
 
-    delayMicroseconds(50);      // pauses for 50 microseconds
+  
   }
+  else {
+    // Display temp for 1/2 second
+    sprintf(s, "%04f", DHT.temperature); // print to string
+    for (int digit = 0; digit < NUM_DIGIT; digit++) {
+      chip_disable();
+      digit_select(digit);
+      x = s[NUM_DIGIT - 1 - digit];
+      //Serial.println(x);
+      set_data(x);
+      write_disable();
+      delayMicroseconds(50);      // pauses for 50 microseconds
+      write_enable();
+      digit_unselect();
+      chip_enable();
 
+      delayMicroseconds(50);      // pauses for 50 microseconds
+    }
+  }
+  
+  
+  //always update hhmmss
   ss++;
   if (ss > 59) {
     ss = 0;
@@ -163,28 +191,12 @@ int chk = DHT.read11(DHT11_PIN);
     hh = 0;
   }
   
-  delayMicroseconds(300000); // Wait a bit before showing temperature
-  
-  // Display temp for 1/2 second
-  sprintf(s, "%04f", DHT.temperature); // print to string
-  for (int digit = 0; digit < NUM_DIGIT; digit++) {
-    chip_disable();
-    digit_select(digit);
-    x = s[NUM_DIGIT - 1 - digit];
-    //Serial.println(x);
-    set_data(x);
-    write_disable();
-    delayMicroseconds(50);      // pauses for 50 microseconds
-    write_enable();
-    digit_unselect();
-    chip_enable();
 
-    delayMicroseconds(50);      // pauses for 50 microseconds
-  }
+   
+ 
 
 
 
-  analogWrite(LED_BUILTIN, ss * 255 / 60); // ratio=30/255
 
 #else
   // Here we print ascci car
