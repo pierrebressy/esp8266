@@ -21,10 +21,10 @@
 #include <dht.h>
 #include <Ticker.h>  //Ticker Library
 
-#define dht_apin A0 // For dht.h
+#define DHT11_PIN 10 // For dht.h
 #define NUM_DIGIT 4
 
-#define DISPLAY_CLOCK 0
+#define DISPLAY_CLOCK 1
 
 // GPIOs pins definition
 // int GPIO_CHIP_ENABLE = 12;  // Removed cause GPIO_09 and GPIO_10 can ONLY receive data (no output)
@@ -44,6 +44,7 @@ int SLEEPING_TIME = 1; // #seconds
 
 
 Ticker myClock;
+dht DHT;
 
 unsigned int count = 0;
 char *msg = " SALUT LES GARS ";
@@ -126,7 +127,13 @@ void set_data(unsigned int x) {
 
 void updateClockAndDisplay()
 {
+int chk = DHT.read11(DHT11_PIN);
+// DHT.temperature
+// DHT.humidity
+
+  
 #if DISPLAY_CLOCK
+
   sprintf(s, "%02d%02d", mm, ss); // print to string
   for (int digit = 0; digit < NUM_DIGIT; digit++) {
     chip_disable();
@@ -155,6 +162,27 @@ void updateClockAndDisplay()
   if (hh > 23) {
     hh = 0;
   }
+  
+  delayMicroseconds(300000); // Wait a bit before showing temperature
+  
+  // Display temp for 1/2 second
+  sprintf(s, "%04f", DHT.temperature); // print to string
+  for (int digit = 0; digit < NUM_DIGIT; digit++) {
+    chip_disable();
+    digit_select(digit);
+    x = s[NUM_DIGIT - 1 - digit];
+    //Serial.println(x);
+    set_data(x);
+    write_disable();
+    delayMicroseconds(50);      // pauses for 50 microseconds
+    write_enable();
+    digit_unselect();
+    chip_enable();
+
+    delayMicroseconds(50);      // pauses for 50 microseconds
+  }
+
+
 
   analogWrite(LED_BUILTIN, ss * 255 / 60); // ratio=30/255
 
