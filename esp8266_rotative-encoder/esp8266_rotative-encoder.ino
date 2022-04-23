@@ -1,14 +1,21 @@
 
 int clkInterruptPin = 14; // GPIO14, pin D5
 int dataPin = 12;         // GPIO12, pin D6
+int pushButtonPin = 2;    // GPIO2, pin D4
 
-volatile unsigned int encoderPos = 0;
+volatile int encoderPos = 0;
+volatile int pushButtonCount = 0;
 
 unsigned int loopCounter = 0;
 
-ICACHE_RAM_ATTR void interrupt_function()
+ICACHE_RAM_ATTR void clkInterrupt()
 {
     encoderPos += digitalRead(dataPin) == HIGH ? 1 : -1;
+}
+
+ICACHE_RAM_ATTR void pushButtonInterrupt()
+{
+    pushButtonCount++;
 }
 
 void setup()
@@ -18,17 +25,20 @@ void setup()
 
     pinMode(dataPin, INPUT_PULLUP);
     pinMode(clkInterruptPin, INPUT);
+    pinMode(pushButtonPin, INPUT);
     
-    
-    attachInterrupt(digitalPinToInterrupt(clkInterruptPin), interrupt_function, RISING);
+    attachInterrupt(digitalPinToInterrupt(clkInterrupt), interrupt_function, RISING);
+    attachInterrupt(digitalPinToInterrupt(pushButtonInterrupt), pushButton_function, RISING);
 }
 
 void loop()
 {
     Serial.print(loopCounter);
-    Serial.print("encoderPos:");
+    Serial.print(" encoderPos:");
     Serial.print(encoderPos, DEC);
+    Serial.print(" pushButtonCount:");
+    Serial.print(pushButtonCount, DEC);
     Serial.println();
-    delayMicroseconds(250000);
+    delayMicroseconds(125000);
     loopCounter++;
 }
