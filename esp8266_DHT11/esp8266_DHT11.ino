@@ -24,7 +24,8 @@ void loop(){
     Serial.print("%  ");
     Serial.print("temperature = ");
     Serial.print(DHT.temperature);
-    // TODO : find decimal values
+    // DHT11 has this limit, it can read temperature and humidity only by integer value.
+    // If you need better precision up to 0.1° then use DHT22 which is more advanced and expensive of course.
     Serial.println("C  ");
     
     // Reading temperature or humidity takes about 250 milliseconds!
