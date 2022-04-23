@@ -6,24 +6,35 @@ Libraries to make DS18B20 work :
 DallasTemperature by Miles Burton
 One Wire Library 
 
+SENSOR_RESOLUTION :
+9 bits: increments of 0.5C, 93.75ms to measure temperature;
+10 bits: increments of 0.25C, 187.5ms to measure temperature;
+11 bits: increments of 0.125C, 375ms to measure temperature;
+12 bits: increments of 0.0625C, 750ms to measure temperature.
+
 */
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
 
-// Data wire is plugged into digital pin 2 on the Arduino
-#define ONE_WIRE_BUS 16
+// Sensor input pin
+#define DATA_PIN 5
+// How many bits to use for temperature values: 9, 10, 11 or 12
+#define SENSOR_RESOLUTION 9
+// Index of sensors connected to data pin, default: 0
+#define SENSOR_INDEX 0
 
-// Setup a oneWire instance to communicate with any OneWire device
-OneWire oneWire(ONE_WIRE_BUS);  
 
-// Pass oneWire reference to DallasTemperature library
+OneWire oneWire(DATA_PIN);
 DallasTemperature sensors(&oneWire);
+DeviceAddress sensorDeviceAddress;
 
 unsigned int i = 0;
 
 void setup() {
   sensors.begin();  // Start up the library
+  sensors.getAddress(sensorDeviceAddress, 0);
+  sensors.setResolution(sensorDeviceAddress, SENSOR_RESOLUTION);
   Serial.begin(9600);
 }
 
@@ -33,20 +44,18 @@ void loop() {
   
   Serial.print(i);
   // Send the command to get temperatures
-  sensors.requestTemperatures(); 
+  sensors.requestTemperatures();
+  // Measurement may take up to 750ms
 
-  //print the temperature in Celsius
-  Serial.print(" Temperature: ");
-  Serial.print(sensors.getTempCByIndex(0));
+  float temperatureInCelsius = sensors.getTempCByIndex(SENSOR_INDEX);
+  float temperatureInFahrenheit = sensors.getTempFByIndex(SENSOR_INDEX);
+
+  Serial.print("Temperature: ");
+  Serial.print(temperatureInCelsius, 4);
   Serial.print((char)176);//shows degrees character
-  Serial.print("C  |  ");
+  Serial.println("C");
   
-  //print the temperature in Fahrenheit
-  Serial.print((sensors.getTempCByIndex(0) * 9.0) / 5.0 + 32.0);
-  Serial.print((char)176);//shows degrees character
-  Serial.println("F");
-  
-  delay(500);
+  delay(1000);
 
   i = i + 1;
 }
