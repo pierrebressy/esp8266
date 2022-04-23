@@ -21,7 +21,7 @@
 #include <dht.h>
 #include <Ticker.h>  //Ticker Library
 
-#define DHT11_PIN 10 // For dht.h
+#define DHT11_PIN 16 // For dht.h
 #define NUM_DIGIT 4
 
 #define DISPLAY_CLOCK 1
@@ -137,7 +137,7 @@ int chk = DHT.read11(DHT11_PIN);
   
 #if DISPLAY_CLOCK
   
-  show_clock = ms<=500;
+  show_clock = ms<500;
   
   
   if(show_clock) {
@@ -178,8 +178,7 @@ int chk = DHT.read11(DHT11_PIN);
     }
   }
 
-  
-  
+
   //always update hhmmss
   ms+=displayPeriodMS;
   if(ms>=1000) {
@@ -241,6 +240,7 @@ void setup() {
   pinMode(GPIO_WRITE, OUTPUT);
   pinMode(GPIO_DIGIT_SELECT_A0, OUTPUT);
   pinMode(GPIO_DIGIT_SELECT_A1, OUTPUT);
+  pinMode(DHT11_PIN, INPUT);
 
   pinMode(GPIO_D0, OUTPUT);
   pinMode(GPIO_D1, OUTPUT);
