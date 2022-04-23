@@ -1,6 +1,6 @@
 
 int clkInterruptPin = 14; // GPIO14, pin D5
-int dataPin = 12;         // GPIO2,  pin D4
+int dataPin = 12;         // GPIO12, pin D6
 
 volatile unsigned int encoderPos = 0;
 
@@ -26,8 +26,8 @@ void setup()
 void loop()
 {
     Serial.print(loopCounter);
-    Serial.print("data:");
-    Serial.print(digitalRead(dataPin)==HIGH, DEC);
+    Serial.print("encoderPos:");
+    Serial.print(encoderPos, DEC);
     Serial.println();
     delayMicroseconds(250000);
     loopCounter++;
