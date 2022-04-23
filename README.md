@@ -1,6 +1,11 @@
 # esp8266
 playing with esp8266
 
+## Infos
+
+### On-board LED
+
+Most of the ESP8266 development boards have a built-in LED. This LED is usually connected to GPIO2.
 
 ## Issues
 
