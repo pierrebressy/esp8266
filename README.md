@@ -11,7 +11,8 @@ The following table shows the correspondence between the labels on the silkscree
 
 The pins highlighted in green are OK to use. The ones highlighted in yellow are OK to use, but you need to pay attention because they may have unexpected behavior mainly at boot. The pins highlighted in red are not recommended to use as inputs or outputs. 
 
-| Label	| GPIO		| Input	| Output	| Notes
+| Label	| GPIO		| Input	| Output	| Notes |
+|-------|-----------|---------------|----|-----|
 | D0	| GPIO16	| no interrupt	| no PWM or I2C support	HIGH at boot. used to wake up from deep sleep
 | D1	| GPIO5		| OK			| OK	often used as SCL (I2C)
 | D2	| GPIO4		| OK			| OK	often used as SDA (I2C)
