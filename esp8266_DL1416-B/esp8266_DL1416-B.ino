@@ -53,7 +53,9 @@ char *msg = " SALUT LES GARS ";
 unsigned int hh = 0;
 unsigned int mm = 0;
 unsigned int ss = 0;
+unsigned int ms = 0;
 unsigned int x = 0;
+const unsigned int displayPeriodMS=500;
 char s[NUM_DIGIT + 1] = "0000";
 
 
@@ -135,7 +137,7 @@ int chk = DHT.read11(DHT11_PIN);
   
 #if DISPLAY_CLOCK
   
-  show_clock = ss & 1;
+  show_clock = ms<=500;
   
   
   if(show_clock) {
@@ -175,23 +177,27 @@ int chk = DHT.read11(DHT11_PIN);
       delayMicroseconds(50);      // pauses for 50 microseconds
     }
   }
+
   
   
   //always update hhmmss
-  ss++;
-  if (ss > 59) {
-    ss = 0;
-    mm++;
-  }
-  if (mm > 59) {
-    mm = 0;
-    hh++;
-  }
-  if (hh > 23) {
-    hh = 0;
-  }
+  ms+=displayPeriodMS;
+  if(ms>=1000) {
+    ms-=1000;
+    ss++;
+    if (ss > 59) {
+      ss = 0;
+      mm++;
+    }
+    if (mm > 59) {
+      mm = 0;
+      hh++;
+    }
+    if (hh > 23) {
+      hh = 0;
+    }
   
-
+  }
    
  
 
@@ -268,7 +274,7 @@ void setup() {
   //Serial.print("Connected, IP address: ");
   //Serial.println(WiFi.localIP());
 
-  myClock.attach(1.0, updateClockAndDisplay); // 1.0 = 1 second
+  myClock.attach(displayPeriodMS/1000., updateClockAndDisplay); // displayPeriod in [ms]
 
   //analogWriteFreq(1000); // 1000Hz
   //analogWrite(LED_BUILTIN, 30); // ratio=30/255
