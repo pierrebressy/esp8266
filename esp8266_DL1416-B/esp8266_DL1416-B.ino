@@ -18,10 +18,10 @@
   - D0 to D6 you should wait 50 nanoseconds before OFF write
 *********/
 #include <ESP8266WiFi.h>
-
+#include <dht.h>
 #include <Ticker.h>  //Ticker Library
 
-
+#define dht_apin A0 // For dht.h
 #define NUM_DIGIT 4
 
 
@@ -53,90 +53,221 @@ unsigned int x = 0;
 char s[NUM_DIGIT + 1] = "0000";
 
 
-int[] get_representation(char car){
+int * get_representation(char car) {
+
+  //static int  r[7];
+
   // returns             a,b,c,d,e,f,g (D0 to D6)
 
   // 1st column of documentation's table
-  if(car == " "){return [0,0,0,0,0,1,0];}
-  if(car == "<"){return [0,0,0,1,0,1,0];}
-  if(car == "0"){return [0,0,0,0,1,1,0];}
-  if(car == "8"){return [0,0,0,1,1,1,0];}
-  if(car == "@"){return [0,0,0,0,0,0,1];}
-  if(car == "H"){return [0,0,0,1,0,0,1];}
-  if(car == "P"){return [0,0,0,0,1,0,1];}
-  if(car == "X"){return [0,0,0,1,1,0,1];}
+  if (car == ' ') {
+    int ret[] = {0, 0, 0, 0, 0, 1, 0};
+  }
+  if (car == '<') {
+    int ret[] = {0, 0, 0, 1, 0, 1, 0};
+  }
+  if (car == '0') {
+    int ret[] = {0, 0, 0, 0, 1, 1, 0};
+  }
+  if (car == '8') {
+    int ret[] = {0, 0, 0, 1, 1, 1, 0};
+  }
+  if (car == '@') {
+    int ret[] = {0, 0, 0, 0, 0, 0, 1};
+  }
+  if (car == 'H') {
+    int ret[] = {0, 0, 0, 1, 0, 0, 1};
+  }
+  if (car == 'P') {
+    int ret[] = {0, 0, 0, 0, 1, 0, 1};
+  }
+  if (car == 'X') {
+    int ret[] = {0, 0, 0, 1, 1, 0, 1};
+  }
 
   // 2nd column of documentation's table
-  if(car == "!"){return [1,0,0,0,0,1,0];}
-  if(car == ">"){return [1,0,0,1,0,1,0];}
-  if(car == "1"){return [1,0,0,0,1,1,0];}
-  if(car == "9"){return [1,0,0,1,1,1,0];}
-  if(car == "A"){return [1,0,0,0,0,0,1];}
-  if(car == "I"){return [1,0,0,1,0,0,1];}
-  if(car == "Q"){return [1,0,0,0,1,0,1];}
-  if(car == "Y"){return [1,0,0,1,1,0,1];}
+  if (car == '!') {
+    int ret[] = {1, 0, 0, 0, 0, 1, 0};
+  }
+  if (car == '>') {
+    int ret[] = {1, 0, 0, 1, 0, 1, 0};
+  }
+  if (car == '1') {
+    int ret[] = {1, 0, 0, 0, 1, 1, 0};
+  }
+  if (car == '9') {
+    int ret[] = {1, 0, 0, 1, 1, 1, 0};
+  }
+  if (car == 'A') {
+    int ret[] = {1, 0, 0, 0, 0, 0, 1};
+  }
+  if (car == 'I') {
+    int ret[] = {1, 0, 0, 1, 0, 0, 1};
+  }
+  if (car == 'Q') {
+    int ret[] = {1, 0, 0, 0, 1, 0, 1};
+  }
+  if (car == 'Y') {
+    int ret[] = {1, 0, 0, 1, 1, 0, 1};
+  }
 
   // 3rd column of documentation's table
-  if(car == "\""){return [0,1,0,0,0,1,0];} // Does this works ?
-  if(car == "*"){return [0,1,0,1,0,1,0];}
-  if(car == "2"){return [0,1,0,0,1,1,0];}
-  if(car == ""){return [0,1,0,1,1,1,0];}  // Unknown
-  if(car == "B"){return [0,1,0,0,0,0,1];}
-  if(car == "J"){return [0,1,0,1,0,0,1];}
-  if(car == "R"){return [0,1,0,0,1,0,1];}
-  if(car == "Z"){return [0,1,0,1,1,0,1];}
+  if (car == '\"') {
+    int ret[] = {0, 1, 0, 0, 0, 1, 0}; // Does this works ?
+  }
+  if (car == '*') {
+    int ret[] = {0, 1, 0, 1, 0, 1, 0};
+  }
+  if (car == '2') {
+    int ret[] = {0, 1, 0, 0, 1, 1, 0};
+  }
+  if (car == '"') {
+    int ret[] = {0, 1, 0, 1, 1, 1, 0};
+  }
+  if (car == 'B') {
+    int ret[] = {0, 1, 0, 0, 0, 0, 1};
+  }
+  if (car == 'J') {
+    int ret[] = {0, 1, 0, 1, 0, 0, 1};
+  }
+  if (car == 'R') {
+    int ret[] = {0, 1, 0, 0, 1, 0, 1};
+  }
+  if (car == 'Z') {
+    int ret[] = {0, 1, 0, 1, 1, 0, 1};
+  }
 
   // 4th column of documentation's table
-  if(car == "!"){return [1,1,0,0,0,1,0];}
-  if(car == "+"){return [1,1,0,1,0,1,0];}
-  if(car == "3"){return [1,1,0,0,1,1,0];}
-  if(car == ""){return [1,1,0,1,1,1,0];}  // Unknown
-  if(car == "C"){return [1,1,0,0,0,0,1];}
-  if(car == "K"){return [1,1,0,1,0,0,1];}
-  if(car == "S"){return [1,1,0,0,1,0,1];}
-  if(car == "("){return [1,1,0,1,1,0,1];}
+  if (car == '!') {
+    int ret[] = {1, 1, 0, 0, 0, 1, 0};
+  }
+  if (car == '+') {
+    int ret[] = {1, 1, 0, 1, 0, 1, 0};
+  }
+  if (car == '3') {
+    int ret[] = {1, 1, 0, 0, 1, 1, 0};
+  }
+  if (car == 'x') {
+    int ret[] = {1, 1, 0, 1, 1, 1, 0}; // Unknown
+  }
+  if (car == 'C') {
+    int ret[] = {1, 1, 0, 0, 0, 0, 1};
+  }
+  if (car == 'K') {
+    int ret[] = {1, 1, 0, 1, 0, 0, 1};
+  }
+  if (car == 'S') {
+    int ret[] = {1, 1, 0, 0, 1, 0, 1};
+  }
+  if (car == '(') {
+    int ret[] = {1, 1, 0, 1, 1, 0, 1};
+  }
 
   // 5th column of documentation's table
-  if(car == ""){return [0,0,1,0,0,1,0];}  // Unknown
-  if(car == ","){return [0,0,1,1,0,1,0];}
-  if(car == "4"){return [0,0,1,0,1,1,0];}
-  if(car == "<"){return [0,0,1,1,1,1,0];}
-  if(car == "D"){return [0,0,1,0,0,0,1];}
-  if(car == "L"){return [0,0,1,1,0,0,1];}
-  if(car == "T"){return [0,0,1,0,1,0,1];}
-  if(car == "\\"){return [0,0,1,1,1,0,1];} // Does this works ?
+  if (car == 'x') {
+    int ret[] = {0, 0, 1, 0, 0, 1, 0}; // Unknown
+  }
+  if (car == ',') {
+    int ret[] = {0, 0, 1, 1, 0, 1, 0};
+  }
+  if (car == '4') {
+    int ret[] = {0, 0, 1, 0, 1, 1, 0};
+  }
+  if (car == '<') {
+    int ret[] = {0, 0, 1, 1, 1, 1, 0};
+  }
+  if (car == 'D') {
+    int ret[] = {0, 0, 1, 0, 0, 0, 1};
+  }
+  if (car == 'L') {
+    int ret[] = {0, 0, 1, 1, 0, 0, 1};
+  }
+  if (car == 'T') {
+    int ret[] = {0, 0, 1, 0, 1, 0, 1};
+  }
+  if (car == '\\') {
+    int ret[] = {0, 0, 1, 1, 1, 0, 1}; // Does this works ?
+  }
 
   // 6th column of documentation's table
-  if(car == "%"){return [0,0,1,0,0,1,0];}  // Does this works ?
-  if(car == "-"){return [0,0,1,1,0,1,0];}
-  if(car == "5"){return [0,0,1,0,1,1,0];}
-  if(car == "="){return [0,0,1,1,1,1,0];}
-  if(car == "E"){return [0,0,1,0,0,0,1];}
-  if(car == "M"){return [0,0,1,1,0,0,1];}
-  if(car == "U"){return [0,0,1,0,1,0,1];}
-  if(car == ")"){return [0,0,1,1,1,0,1];}
+  if (car == '%') {
+    int ret[] = {0, 0, 1, 0, 0, 1, 0}; // Does this works ?
+  }
+  if (car == '-') {
+    int ret[] = {0, 0, 1, 1, 0, 1, 0};
+  }
+  if (car == '5') {
+    int ret[] = {0, 0, 1, 0, 1, 1, 0};
+  }
+  if (car == '=') {
+    int ret[] = {0, 0, 1, 1, 1, 1, 0};
+  }
+  if (car == 'E') {
+    int ret[] = {0, 0, 1, 0, 0, 0, 1};
+  }
+  if (car == 'M') {
+    int ret[] = {0, 0, 1, 1, 0, 0, 1};
+  }
+  if (car == 'U') {
+    int ret[] = {0, 0, 1, 0, 1, 0, 1};
+  }
+  if (car == ')') {
+    int ret[] = {0, 0, 1, 1, 1, 0, 1};
+  }
 
   // 7th column of documentation's table
-  if(car == "&"){return [1,0,1,0,0,1,0];}
-  if(car == "."){return [1,0,1,1,0,1,0];}
-  if(car == "6"){return [1,0,1,0,1,1,0];}
-  if(car == ">"){return [1,0,1,1,1,1,0];}
-  if(car == "F"){return [1,0,1,0,0,0,1];}
-  if(car == "N"){return [1,0,1,1,0,0,1];}
-  if(car == "V"){return [1,0,1,0,1,0,1];}
-  if(car == "^"){return [1,0,1,1,1,0,1];}
+  if (car == '&') {
+    int ret[] = {1, 0, 1, 0, 0, 1, 0};
+  }
+  if (car == '.') {
+    int ret[] = {1, 0, 1, 1, 0, 1, 0};
+  }
+  if (car == '6') {
+    int ret[] = {1, 0, 1, 0, 1, 1, 0};
+  }
+  if (car == '>') {
+    int ret[] = {1, 0, 1, 1, 1, 1, 0};
+  }
+  if (car == 'F') {
+    int ret[] = {1, 0, 1, 0, 0, 0, 1};
+  }
+  if (car == 'N') {
+    int ret[] = {1, 0, 1, 1, 0, 0, 1};
+  }
+  if (car == 'V') {
+    int ret[] = {1, 0, 1, 0, 1, 0, 1};
+  }
+  if (car == '^') {
+    int ret[] = {1, 0, 1, 1, 1, 0, 1};
+  }
 
   // 8th column of documentation's table
-  if(car == "'"){return [1,1,1,0,0,1,0];}
-  if(car == "/"){return [1,1,1,1,0,1,0];}
-  if(car == "7"){return [1,1,1,0,1,1,0];}
-  if(car == "?"){return [1,1,1,1,1,1,0];}
-  if(car == "G"){return [1,1,1,0,0,0,1];}
-  if(car == "O"){return [1,1,1,1,0,0,1];}
-  if(car == "W"){return [1,1,1,0,1,0,1];}
-  if(car == "_"){return [1,1,1,1,1,0,1];}
-  
-  return [0,0,0,0,0,0,1];  // return "@" if nothing found
+  if (car == '\'') {
+    int ret[] = {1, 1, 1, 0, 0, 1, 0};
+  }
+  if (car == '/') {
+    int ret[] = {1, 1, 1, 1, 0, 1, 0};
+  }
+  if (car == '7') {
+    int ret[] = {1, 1, 1, 0, 1, 1, 0};
+  }
+  if (car == '?') {
+    int ret[] = {1, 1, 1, 1, 1, 1, 0};
+  }
+  if (car == 'G') {
+    int ret[] = {1, 1, 1, 0, 0, 0, 1};
+  }
+  if (car == 'O') {
+    int ret[] = {1, 1, 1, 1, 0, 0, 1};
+  }
+  if (car == 'W') {
+    int ret[] = {1, 1, 1, 0, 1, 0, 1};
+  }
+  if (car == '_') {
+    int ret[] = {1, 1, 1, 1, 1, 0, 1};
+  }
+
+  int ret[] = {0, 0, 0, 0, 0, 0, 1}; // return "@" if nothing found
 }
 
 
@@ -209,7 +340,7 @@ void set_data(int a, int b, int c, int d, int e, int f, int g) {
 
 void updateClockAndDisplay()
 {
-  sprintf(s, "%02d%02d", mm,ss);  // print to string
+  sprintf(s, "%02d%02d", mm, ss); // print to string
   for (int digit = 0; digit < NUM_DIGIT; digit++) {
     chip_disable();
     digit_select(digit);
@@ -226,35 +357,33 @@ void updateClockAndDisplay()
   }
 
   ss++;
-  if(ss>59) {
-    ss=0;
+  if (ss > 59) {
+    ss = 0;
     mm++;
   }
-  if(mm>59) {
-    mm=0;
+  if (mm > 59) {
+    mm = 0;
     hh++;
   }
-  if(hh>23) {
-    hh=0;
+  if (hh > 23) {
+    hh = 0;
   }
-  
-  analogWrite(LED_BUILTIN, ss*255/60); // ratio=30/255
+
+  analogWrite(LED_BUILTIN, ss * 255 / 60); // ratio=30/255
   delayMicroseconds(500000);// pauses for 0.5 second to display temp
 
   // Here we print temperature reading
-  for (int digit = 0; digit < NUM_DIGIT; digit++) {
-    chip_disable();
-    digit_select(digit);
-    x = s[NUM_DIGIT - 1 - digit];
-    //Serial.println(x);
-    set_data(x & 0x01 ? 1 : 0, x & 0x02 ? 1 : 0, x & 0x04 ? 1 : 0, x & 0x08 ? 1 : 0, x & 0x10 ? 1 : 0, x & 0x20 ? 1 : 0, x & 0x40 ? 1 : 0);
-    write_disable();
-    delayMicroseconds(50);      // pauses for 50 microseconds
-    write_enable();
-    digit_unselect();
-    chip_enable();
-  }
 
+  int* repr = get_representation('#');
+  Serial.print(repr[0]);
+  Serial.print(repr[1]);
+  Serial.print(repr[2]);
+  Serial.print(repr[3]);
+  Serial.print(repr[4]);
+  Serial.print(repr[5]);
+  Serial.print(repr[6]);
+  Serial.println();
+  //set_data(repr[0],repr[1],repr[2],repr[3],repr[4],repr[5],repr[6]);
 
   return;
 }
@@ -287,7 +416,7 @@ void setup() {
   // Setup Wifi
   digitalWrite(LED_BUILTIN, HIGH);
 
-  //Serial.begin(115200);
+  Serial.begin(115200);
   //Serial.println();
 
   WiFi.begin("RANTANPLAN", "F5QiRNX1rCf9iqNaYg");
@@ -304,7 +433,7 @@ void setup() {
   //Serial.println(WiFi.localIP());
 
   myClock.attach(1.0, updateClockAndDisplay); // 1.0 = 1 second
-  
+
   //analogWriteFreq(1000); // 1000Hz
   //analogWrite(LED_BUILTIN, 30); // ratio=30/255
 }
@@ -322,12 +451,12 @@ void loop_debug() {
 // The loop function runs over and over again forever
 void loop() {
   ESP.wdtFeed();
-  
+
   // dummy freq on LED_BUILTIN
   digitalWrite(LED_BUILTIN, LOW);
   delayMicroseconds(1000);
   digitalWrite(LED_BUILTIN, HIGH);
-  delayMicroseconds(30000); 
+  delayMicroseconds(30000);
 
-  
+
 }
