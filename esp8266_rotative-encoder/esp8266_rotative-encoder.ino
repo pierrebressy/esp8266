@@ -28,7 +28,7 @@ boolean B_set = false;
 // Avec une rapidité d'accès plus importante, dépend des processeurs au besoin
 ICACHE_RAM_ATTR void doEncoderA() {
   // Test transition
-  A_set = digitalRead(encoderPinA) == HIGH;
+  //A_set = digitalRead(encoderPinA) == HIGH;
   // and adjust counter + if A leads B
   //encoderPos += (A_set != B_set) ? +1 : -1;
 
@@ -57,23 +57,26 @@ void setup() {
   digitalWrite(clearButton, HIGH);
 
   // encoder pin on interrupt 0 (priority lowest) (pin 2)
-  attachInterrupt(0, doEncoderA, RISE);
+  attachInterrupt(0, doEncoderA, RISING);
   // encoder pin on interrupt 1 (pin 3)
   //attachInterrupt(1, doEncoderB, CHANGE);
 
 }
 
+unsigned int i = 0;
 
 void loop() {
-  if (lastReportedPos != encoderPos) {
+  
+  //if (lastReportedPos != encoderPos) {
+    Serial.print(i);
     Serial.print("Index:");
     Serial.print(encoderPos, DEC);
     Serial.println();
     lastReportedPos = encoderPos;
-  }
-  if (digitalRead(clearButton) == LOW)  {
-    encoderPos = 0;
-  }
+  //}
+  //if (digitalRead(clearButton) == LOW)  {
+ //   encoderPos = 0;
+  //}
 //  analogWrite(RGBLED_RED, 0);
 //  analogWrite(RGBLED_GREEN, 255);
 //  analogWrite(RGBLED_BLUE, 255);
@@ -81,5 +84,6 @@ void loop() {
 //  delayMicroseconds(250000);
 //  digitalWrite(LEDBLINK_PIN, HIGH);
 //  delayMicroseconds(250000);
-  
+  delayMicroseconds(250000);
+  i++;
 }
