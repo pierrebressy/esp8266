@@ -6,8 +6,7 @@ volatile unsigned int encoderPos = 0;
 
 unsigned int loopCounter = 0;
 
-//ICACHE_RAM_ATTR void interrupt_function()
-void interrupt_function()
+ICACHE_RAM_ATTR void interrupt_function()
 {
     encoderPos += digitalRead(dataPin) == HIGH ? 1 : -1;
 }
@@ -18,10 +17,10 @@ void setup()
     Serial.begin(9600);
 
     pinMode(dataPin, INPUT_PULLUP);
-    pinMode(clkInterruptPin, INPUT_PULLUP);
+    pinMode(clkInterruptPin, INPUT);
     
     
-    attachInterrupt(digitalPinToInterrupt(clkInterruptPin), interrupt_function, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(clkInterruptPin), interrupt_function, RISING);
 }
 
 void loop()
