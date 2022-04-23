@@ -24,7 +24,7 @@
 #define dht_apin A0 // For dht.h
 #define NUM_DIGIT 4
 
-
+#define DISPLAY_MSG 0
 
 // GPIOs pins definition
 // int GPIO_CHIP_ENABLE = 12;  // Removed cause GPIO_09 and GPIO_10 can ONLY receive data (no output)
@@ -51,224 +51,6 @@ unsigned int mm = 0;
 unsigned int ss = 0;
 unsigned int x = 0;
 char s[NUM_DIGIT + 1] = "0000";
-
-
-int * get_representation(char car) {
-
-  //static int  r[7];
-
-  // returns             a,b,c,d,e,f,g (D0 to D6)
-
-  // 1st column of documentation's table
-  if (car == ' ') {
-    int ret[] = {0, 0, 0, 0, 0, 1, 0};
-  }
-  if (car == '<') {
-    int ret[] = {0, 0, 0, 1, 0, 1, 0};
-  }
-  if (car == '0') {
-    int ret[] = {0, 0, 0, 0, 1, 1, 0};
-  }
-  if (car == '8') {
-    int ret[] = {0, 0, 0, 1, 1, 1, 0};
-  }
-  if (car == '@') {
-    int ret[] = {0, 0, 0, 0, 0, 0, 1};
-  }
-  if (car == 'H') {
-    int ret[] = {0, 0, 0, 1, 0, 0, 1};
-  }
-  if (car == 'P') {
-    int ret[] = {0, 0, 0, 0, 1, 0, 1};
-  }
-  if (car == 'X') {
-    int ret[] = {0, 0, 0, 1, 1, 0, 1};
-  }
-
-  // 2nd column of documentation's table
-  if (car == '!') {
-    int ret[] = {1, 0, 0, 0, 0, 1, 0};
-  }
-  if (car == '>') {
-    int ret[] = {1, 0, 0, 1, 0, 1, 0};
-  }
-  if (car == '1') {
-    int ret[] = {1, 0, 0, 0, 1, 1, 0};
-  }
-  if (car == '9') {
-    int ret[] = {1, 0, 0, 1, 1, 1, 0};
-  }
-  if (car == 'A') {
-    int ret[] = {1, 0, 0, 0, 0, 0, 1};
-  }
-  if (car == 'I') {
-    int ret[] = {1, 0, 0, 1, 0, 0, 1};
-  }
-  if (car == 'Q') {
-    int ret[] = {1, 0, 0, 0, 1, 0, 1};
-  }
-  if (car == 'Y') {
-    int ret[] = {1, 0, 0, 1, 1, 0, 1};
-  }
-
-  // 3rd column of documentation's table
-  if (car == '\"') {
-    int ret[] = {0, 1, 0, 0, 0, 1, 0}; // Does this works ?
-  }
-  if (car == '*') {
-    int ret[] = {0, 1, 0, 1, 0, 1, 0};
-  }
-  if (car == '2') {
-    int ret[] = {0, 1, 0, 0, 1, 1, 0};
-  }
-  if (car == '"') {
-    int ret[] = {0, 1, 0, 1, 1, 1, 0};
-  }
-  if (car == 'B') {
-    int ret[] = {0, 1, 0, 0, 0, 0, 1};
-  }
-  if (car == 'J') {
-    int ret[] = {0, 1, 0, 1, 0, 0, 1};
-  }
-  if (car == 'R') {
-    int ret[] = {0, 1, 0, 0, 1, 0, 1};
-  }
-  if (car == 'Z') {
-    int ret[] = {0, 1, 0, 1, 1, 0, 1};
-  }
-
-  // 4th column of documentation's table
-  if (car == '!') {
-    int ret[] = {1, 1, 0, 0, 0, 1, 0};
-  }
-  if (car == '+') {
-    int ret[] = {1, 1, 0, 1, 0, 1, 0};
-  }
-  if (car == '3') {
-    int ret[] = {1, 1, 0, 0, 1, 1, 0};
-  }
-  if (car == 'x') {
-    int ret[] = {1, 1, 0, 1, 1, 1, 0}; // Unknown
-  }
-  if (car == 'C') {
-    int ret[] = {1, 1, 0, 0, 0, 0, 1};
-  }
-  if (car == 'K') {
-    int ret[] = {1, 1, 0, 1, 0, 0, 1};
-  }
-  if (car == 'S') {
-    int ret[] = {1, 1, 0, 0, 1, 0, 1};
-  }
-  if (car == '(') {
-    int ret[] = {1, 1, 0, 1, 1, 0, 1};
-  }
-
-  // 5th column of documentation's table
-  if (car == 'x') {
-    int ret[] = {0, 0, 1, 0, 0, 1, 0}; // Unknown
-  }
-  if (car == ',') {
-    int ret[] = {0, 0, 1, 1, 0, 1, 0};
-  }
-  if (car == '4') {
-    int ret[] = {0, 0, 1, 0, 1, 1, 0};
-  }
-  if (car == '<') {
-    int ret[] = {0, 0, 1, 1, 1, 1, 0};
-  }
-  if (car == 'D') {
-    int ret[] = {0, 0, 1, 0, 0, 0, 1};
-  }
-  if (car == 'L') {
-    int ret[] = {0, 0, 1, 1, 0, 0, 1};
-  }
-  if (car == 'T') {
-    int ret[] = {0, 0, 1, 0, 1, 0, 1};
-  }
-  if (car == '\\') {
-    int ret[] = {0, 0, 1, 1, 1, 0, 1}; // Does this works ?
-  }
-
-  // 6th column of documentation's table
-  if (car == '%') {
-    int ret[] = {0, 0, 1, 0, 0, 1, 0}; // Does this works ?
-  }
-  if (car == '-') {
-    int ret[] = {0, 0, 1, 1, 0, 1, 0};
-  }
-  if (car == '5') {
-    int ret[] = {0, 0, 1, 0, 1, 1, 0};
-  }
-  if (car == '=') {
-    int ret[] = {0, 0, 1, 1, 1, 1, 0};
-  }
-  if (car == 'E') {
-    int ret[] = {0, 0, 1, 0, 0, 0, 1};
-  }
-  if (car == 'M') {
-    int ret[] = {0, 0, 1, 1, 0, 0, 1};
-  }
-  if (car == 'U') {
-    int ret[] = {0, 0, 1, 0, 1, 0, 1};
-  }
-  if (car == ')') {
-    int ret[] = {0, 0, 1, 1, 1, 0, 1};
-  }
-
-  // 7th column of documentation's table
-  if (car == '&') {
-    int ret[] = {1, 0, 1, 0, 0, 1, 0};
-  }
-  if (car == '.') {
-    int ret[] = {1, 0, 1, 1, 0, 1, 0};
-  }
-  if (car == '6') {
-    int ret[] = {1, 0, 1, 0, 1, 1, 0};
-  }
-  if (car == '>') {
-    int ret[] = {1, 0, 1, 1, 1, 1, 0};
-  }
-  if (car == 'F') {
-    int ret[] = {1, 0, 1, 0, 0, 0, 1};
-  }
-  if (car == 'N') {
-    int ret[] = {1, 0, 1, 1, 0, 0, 1};
-  }
-  if (car == 'V') {
-    int ret[] = {1, 0, 1, 0, 1, 0, 1};
-  }
-  if (car == '^') {
-    int ret[] = {1, 0, 1, 1, 1, 0, 1};
-  }
-
-  // 8th column of documentation's table
-  if (car == '\'') {
-    int ret[] = {1, 1, 1, 0, 0, 1, 0};
-  }
-  if (car == '/') {
-    int ret[] = {1, 1, 1, 1, 0, 1, 0};
-  }
-  if (car == '7') {
-    int ret[] = {1, 1, 1, 0, 1, 1, 0};
-  }
-  if (car == '?') {
-    int ret[] = {1, 1, 1, 1, 1, 1, 0};
-  }
-  if (car == 'G') {
-    int ret[] = {1, 1, 1, 0, 0, 0, 1};
-  }
-  if (car == 'O') {
-    int ret[] = {1, 1, 1, 1, 0, 0, 1};
-  }
-  if (car == 'W') {
-    int ret[] = {1, 1, 1, 0, 1, 0, 1};
-  }
-  if (car == '_') {
-    int ret[] = {1, 1, 1, 1, 1, 0, 1};
-  }
-
-  int ret[] = {0, 0, 0, 0, 0, 0, 1}; // return "@" if nothing found
-}
 
 
 void chip_enable() {
@@ -325,21 +107,24 @@ void digit_unselect() {
   digitalWrite(GPIO_DIGIT_SELECT_A1, LOW); // Disable
 }
 
-void set_data(int a, int b, int c, int d, int e, int f, int g) {
+void set_data(unsigned int x) {
+  // x = ascii repr of car
+
   // writes values a to g into D0 to D6
   // Values a to g should be >= 0 and <= 1
-  digitalWrite(GPIO_D0, a);
-  digitalWrite(GPIO_D1, b);
-  digitalWrite(GPIO_D2, c);
-  digitalWrite(GPIO_D3, d);
-  digitalWrite(GPIO_D4, e);
-  digitalWrite(GPIO_D5, f);
-  digitalWrite(GPIO_D6, g);
+  digitalWrite(GPIO_D0, x & 0x01 ? 1 : 0);
+  digitalWrite(GPIO_D1, x & 0x02 ? 1 : 0);
+  digitalWrite(GPIO_D2, x & 0x04 ? 1 : 0);
+  digitalWrite(GPIO_D3, x & 0x08 ? 1 : 0);
+  digitalWrite(GPIO_D4, x & 0x10 ? 1 : 0);
+  digitalWrite(GPIO_D5, x & 0x20 ? 1 : 0);
+  digitalWrite(GPIO_D6, x & 0x40 ? 1 : 0);
 }
 
 
 void updateClockAndDisplay()
 {
+#if DISPLAY_MSG
   sprintf(s, "%02d%02d", mm, ss); // print to string
   for (int digit = 0; digit < NUM_DIGIT; digit++) {
     chip_disable();
@@ -370,21 +155,33 @@ void updateClockAndDisplay()
   }
 
   analogWrite(LED_BUILTIN, ss * 255 / 60); // ratio=30/255
-  delayMicroseconds(500000);// pauses for 0.5 second to display temp
+#else
 
-  // Here we print temperature reading
 
-  int* repr = get_representation('#');
-  Serial.print(repr[0]);
-  Serial.print(repr[1]);
-  Serial.print(repr[2]);
-  Serial.print(repr[3]);
-  Serial.print(repr[4]);
-  Serial.print(repr[5]);
-  Serial.print(repr[6]);
-  Serial.println();
-  //set_data(repr[0],repr[1],repr[2],repr[3],repr[4],repr[5],repr[6]);
+  char *msg = " SALUT LES GARS ";
+  unsigned int count = 0;
+  for (int digit = 0; digit < NUM_DIGIT; digit++) {
+    for (int k = 0; k < NUM_DIGIT; k++) {
+      x = msg[count + k];
+      chip_disable();
+      digit_select(digit);
+      set_data(x & 0x01 ? 1 : 0, x & 0x02 ? 1 : 0, x & 0x04 ? 1 : 0, x & 0x08 ? 1 : 0, x & 0x10 ? 1 : 0, x & 0x20 ? 1 : 0, x & 0x40 ? 1 : 0);
+      write_disable();
+      delayMicroseconds(50); // pauses for 50 microseconds
+      write_enable();
+      digit_unselect();
+      chip_enable();
+      delayMicroseconds(50); // pauses for 50 microseconds
+    }
+  }
 
+  count++;
+  // loop to the begining of the message
+  if (msg[count + k - 1 ] == 0) {
+    count = 0;
+  }
+
+#endif
   return;
 }
 
@@ -416,7 +213,7 @@ void setup() {
   // Setup Wifi
   digitalWrite(LED_BUILTIN, HIGH);
 
-  Serial.begin(115200);
+  //Serial.begin(115200);
   //Serial.println();
 
   WiFi.begin("RANTANPLAN", "F5QiRNX1rCf9iqNaYg");
