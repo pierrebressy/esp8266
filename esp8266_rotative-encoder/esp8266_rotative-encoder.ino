@@ -24,11 +24,19 @@ boolean A_set = false;
 boolean B_set = false;
 
 // Interrupt on A changing state
+//ICACHE_RAM_ATTR décorateur de fonction qui indique au linker que la fonction doit etre mise dans une zone memoire spéciale qui est dédiée aux interruptions
+// Avec une rapidité d'accès plus importante, dépend des processeurs au besoin
 ICACHE_RAM_ATTR void doEncoderA() {
   // Test transition
   A_set = digitalRead(encoderPinA) == HIGH;
   // and adjust counter + if A leads B
-  encoderPos += (A_set != B_set) ? +1 : -1;
+  //encoderPos += (A_set != B_set) ? +1 : -1;
+
+  if(digitalRead(encoderPinB) == HIGH){
+    encoderPos++;
+  } else {
+    encoderPos--;
+  }
 }
 
 // Interrupt on B changing state
@@ -48,10 +56,10 @@ void setup() {
   digitalWrite(encoderPinB, HIGH);  // turn on pull-up resistor
   digitalWrite(clearButton, HIGH);
 
-  // encoder pin on interrupt 0 (pin 2)
-  attachInterrupt(0, doEncoderA, CHANGE);
+  // encoder pin on interrupt 0 (priority lowest) (pin 2)
+  attachInterrupt(0, doEncoderA, RISE);
   // encoder pin on interrupt 1 (pin 3)
-  attachInterrupt(1, doEncoderB, CHANGE);
+  //attachInterrupt(1, doEncoderB, CHANGE);
 
 }
 
