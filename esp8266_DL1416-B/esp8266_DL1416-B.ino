@@ -72,7 +72,7 @@ void write_disable() {
 
 void digit_select(int digit) {
   if (digit > 3 || digit < 0) {
-    return; // digit should be in 0-3 range.
+    return;  // digit should be in 0-3 range.
   }
 
   // Désactivation des pins
@@ -80,20 +80,23 @@ void digit_select(int digit) {
   digitalWrite(GPIO_DIGIT_SELECT_A1, LOW); // Disable
 
   if (digit == 0) {
-    digitalWrite(GPIO_DIGIT_SELECT_A0, LOW); // Disable
+    return;
   }
 
   if (digit == 1) {
     digitalWrite(GPIO_DIGIT_SELECT_A0, HIGH); // Enable
+    return;
   }
 
   if (digit == 2) {
     digitalWrite(GPIO_DIGIT_SELECT_A1, HIGH); // Enable
+    return;
   }
 
   if (digit == 3) {
     digitalWrite(GPIO_DIGIT_SELECT_A0, HIGH); // Enable
     digitalWrite(GPIO_DIGIT_SELECT_A1, HIGH); // Enable
+    return;
   }
 }
 
@@ -104,6 +107,8 @@ void digit_unselect() {
 }
 
 void set_data(int a, int b, int c, int d, int e, int f, int g) {
+  // writes values a to g into D0 to D6
+  // Values a to g should be >= 0 and <= 1
   digitalWrite(GPIO_D0, a);
   digitalWrite(GPIO_D1, b);
   digitalWrite(GPIO_D2, c);
@@ -116,7 +121,7 @@ void set_data(int a, int b, int c, int d, int e, int f, int g) {
 
 void updateClockAndDisplay()
 {
-  sprintf(s, "%02d%02d", mm,ss);
+  sprintf(s, "%02d%02d", mm,ss);  // print to string
   for (int digit = 0; digit < NUM_DIGIT; digit++) {
     chip_disable();
     digit_select(digit);
