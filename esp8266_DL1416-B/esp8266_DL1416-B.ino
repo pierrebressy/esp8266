@@ -21,8 +21,15 @@
 
 #include <Ticker.h>  //Ticker Library
 
+#define DISPLAY_MSG 1 // set to 0 for clock MM:SS
 
 #define NUM_DIGIT 4
+
+
+
+
+char *msg="    SALUT LES GARS    ";
+
 
 
 
@@ -49,8 +56,13 @@ Ticker myClock;
 unsigned int hh = 0;
 unsigned int mm = 0;
 unsigned int ss = 0;
-unsigned int x = 0;
 char s[NUM_DIGIT + 1] = "0000";
+
+
+int count = 0;
+int k = 0;
+unsigned int x = 0;
+
 
 void chip_enable() {
   //digitalWrite(GPIO_CHIP_ENABLE, HIGH); // sets the pin on
@@ -116,6 +128,27 @@ void set_data(int a, int b, int c, int d, int e, int f, int g) {
 
 void updateClockAndDisplay()
 {
+#if DISPLAY_MSG
+  for (k = 0; k < NUM_DIGIT;k++) {
+    x = msg[count + k];
+    chip_disable();
+    digit_select(digit);
+    set_data(x & 0x01 ? 1 : 0, x & 0x02 ? 1 : 0, x & 0x04 ? 1 : 0, x & 0x08 ? 1 : 0, x & 0x10 ? 1 : 0, x & 0x20 ? 1 : 0, x & 0x40 ? 1 : 0);
+    write_disable();
+    delayMicroseconds(50);      // pauses for 50 microseconds
+    write_enable();
+    digit_unselect();
+    chip_enable();
+    delayMicroseconds(50);      // pauses for 50 microseconds
+  }
+  
+  count++;
+  // loop to the begining of the message
+  if (msg[count + k-1 ]==0) {
+    count = 0;
+  }
+
+#else
   sprintf(s, "%02d%02d", mm,ss);
   for (int digit = 0; digit < NUM_DIGIT; digit++) {
     chip_disable();
@@ -144,8 +177,7 @@ void updateClockAndDisplay()
   if(hh>23) {
     hh=0;
   }
-  
-  analogWrite(LED_BUILTIN, ss*255/60); // ratio=30/255
+#endif  
 
   return;
 }
@@ -193,9 +225,12 @@ void setup() {
 
   //Serial.print("Connected, IP address: ");
   //Serial.println(WiFi.localIP());
-
-  myClock.attach(1.0, updateClockAndDisplay); // 1.0 = 1 second
   
+#if DISPLAY_MSG
+  myClock.attach(0.2, updateClockAndDisplay); // 200ms
+#else
+  myClock.attach(1.0, updateClockAndDisplay); // 1.0 = 1 second
+#endif
   //analogWriteFreq(1000); // 1000Hz
   //analogWrite(LED_BUILTIN, 30); // ratio=30/255
 }
