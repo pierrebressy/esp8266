@@ -23,7 +23,8 @@ void loop(){
     Serial.print(DHT.humidity);
     Serial.print("%  ");
     Serial.print("temperature = ");
-    Serial.print(DHT.temperature); 
+    Serial.print(DHT.temperature);
+    // TODO : find decimal values
     Serial.println("C  ");
     
     // Reading temperature or humidity takes about 250 milliseconds!
