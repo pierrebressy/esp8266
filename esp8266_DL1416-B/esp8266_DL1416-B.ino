@@ -24,7 +24,7 @@
 #define dht_apin A0 // For dht.h
 #define NUM_DIGIT 4
 
-#define DISPLAY_MSG 0
+#define DISPLAY_CLOCK 0
 
 // GPIOs pins definition
 // int GPIO_CHIP_ENABLE = 12;  // Removed cause GPIO_09 and GPIO_10 can ONLY receive data (no output)
@@ -45,6 +45,8 @@ int SLEEPING_TIME = 1; // #seconds
 
 Ticker myClock;
 
+unsigned int count = 0;
+char *msg = " SALUT LES GARS ";
 
 unsigned int hh = 0;
 unsigned int mm = 0;
@@ -124,7 +126,7 @@ void set_data(unsigned int x) {
 
 void updateClockAndDisplay()
 {
-#if DISPLAY_MSG
+#if DISPLAY_CLOCK
   sprintf(s, "%02d%02d", mm, ss); // print to string
   for (int digit = 0; digit < NUM_DIGIT; digit++) {
     chip_disable();
@@ -157,13 +159,10 @@ void updateClockAndDisplay()
   analogWrite(LED_BUILTIN, ss * 255 / 60); // ratio=30/255
 
 #else
-  char *msg = " SALUT LES GARS ";
-  unsigned int count = 0;
-  for (int digit = 0; digit < NUM_DIGIT; digit++) {
     for (int k = 0; k < NUM_DIGIT; k++) {
       x = msg[count + k];
       chip_disable();
-      digit_select(digit);
+      digit_select(NUM_DIGIT - 1 - k);
       set_data(x);
       write_disable();
       delayMicroseconds(50); // pauses for 50 microseconds
